@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function serverInfo {
+printf "\n$1:\n"
+ip=$(ssh $1 ifconfig $2 | grep 'inet'| egrep -v "(inet6|127.0.0.1)" | awk '{ print $2}')
+domain=$(ssh $1 ls /etc/apache2/sites-enabled | egrep -v '(default)|(ssl)' | sed -e "s/^[a-z]*\.//" -e "s/\.conf$//" | head -n 1)
+uptime=$(ssh $1 uptime -p | sed -e "s/^up //")
+df=$(ssh $1 df -h | grep $3 | grep '[0-9\.]*[KMGT\%]' -o)
+printf "  Price:         %s\n" "$(echo $4)"
+printf "  Ip Address:    %s\n" "$(echo $ip)"
+printf "  Domain:        %s\n" "$(echo $domain)"
+printf "  Uptime:        %s\n" "$(echo $uptime | sed -e "s/^up //")"
+printf "  Storage Total: %3s\n  Storage Used:  %3s, %3s \n" $(echo $df | awk '{print $1;}') $(echo $df | awk '{print $2;}') $(echo $df | awk '{print $4;}')
+}
+
+echo "Pixiys's Servers Script"
+serverInfo "static"   "venet0:0" "/dev/simfs" "\$5/month"
+serverInfo "variable" "eth0"     "/dev/sda"   "\$5/month"

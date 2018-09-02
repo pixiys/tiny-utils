@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sftp static
+put todo.md
+bye

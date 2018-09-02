@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied";
+    exit;
+fi
+
+a=$(printf 'R');
+b=$(printf %$(echo $1)s |tr " " "E");
+echo $a$b | xclip -i -sel c -f
+echo $a$b | xclip -i -sel p
